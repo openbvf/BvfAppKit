@@ -1,0 +1,40 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  test:
+    if: github.event.pull_request.draft == false || github.event_name == 'push'
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v6
+      - run: swift test
+
+  sanitizers:
+    if: github.event.pull_request.draft == false || github.event_name == 'push'
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        sanitizer: [thread, address]
+    steps:
+      - uses: actions/checkout@v6
+      - run: swift test --sanitize=${{ matrix.sanitizer }}
+
+  build-ios:
+    if: github.event.pull_request.draft == false || github.event_name == 'push'
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build BvfAppKit for iOS Simulator
+        run: |
+          xcodebuild build \
+            -scheme BvfAppKit \
+            -destination 'generic/platform=iOS Simulator' \
+            -skipPackagePluginValidation \
+            -skipMacroValidation
