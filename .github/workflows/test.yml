@@ -10,14 +10,14 @@ on:
 jobs:
   test:
     if: github.event.pull_request.draft == false || github.event_name == 'push'
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
       - uses: actions/checkout@v6
       - run: swift test
 
   sanitizers:
     if: github.event.pull_request.draft == false || github.event_name == 'push'
-    runs-on: macos-15
+    runs-on: macos-26
     strategy:
       fail-fast: false
       matrix:
@@ -28,7 +28,7 @@ jobs:
 
   build-ios:
     if: github.event.pull_request.draft == false || github.event_name == 'push'
-    runs-on: macos-15
+    runs-on: macos-26
     steps:
       - uses: actions/checkout@v6
       - name: Build BvfAppKit for iOS Simulator
