@@ -40,6 +40,12 @@ Triggers `clearSensitiveData` on inactivity. Session teardown is BvfAppKit's par
 - **Standard Mode**: requires a private key file and a folder URL.
 - **iCloud Write-Only Mode**: requires iCloud Drive to be available. The private key is not on this device, and there is no local fallback. If iCloud becomes unavailable, the app is unusable until iCloud is restored.
 
+### iCloud public key distribution
+
+Consuming apps publish the local public key to a shared iCloud location so iOS captures can encrypt to it. `PubkeyDistributor` watches that location and detects when the remote key diverges from the local one, a possible sign of substitution. Mismatches set `pubkeyMismatch`, which the consuming app surfaces to the user. Restoration is opt-in: the user must invoke `confirmOverwrite()` to re-publish the local key over the remote one.
+
+What this does not address: an adversary who can write to the iCloud journal folder can deposit `.bvf` files encrypted to the current public key, and BvfAppKit will sync and decrypt them as legitimate entries. There is no per-entry authentication today.
+
 ### Core dumps
 
 BvfAppKit provides `DisableCoreDumps.apply()`. Apps must call it from their `init` to prevent the OS from spilling process memory to disk on crash; process memory contains the unlocked private key while a session is open.
