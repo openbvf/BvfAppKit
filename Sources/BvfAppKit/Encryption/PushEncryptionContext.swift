@@ -7,6 +7,7 @@ import Darwin
 /// Buffer hygiene, not full plaintext protection in memory: `finish()` and `deinit` zero the buffer's
 /// unflushed tail via `memset_s`. Bulk residency is dominated by AVFoundation encoder pools, any temp file
 /// written by AVAssetWriter / AVAudioRecorder, and `Data`'s heap allocator semantics — outside this object's reach.
+/// Audited 2026-06-29 (eslogger): no AVAudioRecorder/AVAssetWriter disk scratch in current path; memory-residency concerns above unverified.
 public final class PushEncryptionContext {
     private let outputHandle: FileHandle
     private let encryptChunk: (Data, Bool) throws -> Data
