@@ -526,7 +526,7 @@ open class BrowseViewModelBase: NSObject {
     }
 
     /// Delete all selected entries
-    public func deleteSelected() async {
+    open func deleteSelected() async {
         guard !selectedDates.isEmpty else { return }
         guard let folderURL else { return }
 
@@ -571,7 +571,7 @@ open class BrowseViewModelBase: NSObject {
     /// - Parameters:
     ///   - dates: Set of dates to move
     ///   - newDate: Target date
-    public func changeDate(for dates: Set<Date>, to newDate: Date) async {
+    open func changeDate(for dates: Set<Date>, to newDate: Date) async {
         guard let folderURL else { return }
         let capturedFilesByDate = filesByDate
         let result = await Task.detached {
