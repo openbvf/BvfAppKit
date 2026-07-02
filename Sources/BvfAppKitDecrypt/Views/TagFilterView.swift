@@ -6,6 +6,7 @@ struct TagFilterView: View {
     let allTags: [String]
 
     @State private var searchText: String = ""
+    @State private var selectedAtOpen: Set<String> = []
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -48,14 +49,13 @@ struct TagFilterView: View {
                 .font(.caption)
             }
         }
+        .onAppear { selectedAtOpen = selectedTags }
     }
 
     private var filteredTags: [String] {
         let trimmed = searchText.trimmingCharacters(in: .whitespaces).lowercased()
-        if trimmed.isEmpty {
-            return allTags
-        }
-        return allTags.filter { $0.lowercased().contains(trimmed) }
+        let matches = trimmed.isEmpty ? allTags : allTags.filter { $0.lowercased().contains(trimmed) }
+        return matches.filter { selectedAtOpen.contains($0) } + matches.filter { !selectedAtOpen.contains($0) }
     }
 
     private func toggleTag(_ tag: String) {
