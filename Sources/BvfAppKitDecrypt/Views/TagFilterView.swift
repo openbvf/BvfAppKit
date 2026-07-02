@@ -21,7 +21,7 @@ struct TagFilterView: View {
             }
 
             ScrollView {
-                VStack(alignment: .leading, spacing: 2) {
+                LazyVStack(alignment: .leading, spacing: 2) {
                     ForEach(filteredTags, id: \.self) { tag in
                         Button(action: {
                             toggleTag(tag)
