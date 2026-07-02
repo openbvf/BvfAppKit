@@ -100,28 +100,22 @@ private struct BrowseToolbarModifier<VM: BrowseViewModelBase>: ViewModifier {
                 ToolbarItem(placement: .automatic) {
                     if !viewModel.selectedTagFilters.isEmpty {
                         HStack(spacing: 4) {
-                            if viewModel.selectedTagFilters.count > 1 {
-                                Text(viewModel.tagFilterMode == .any ? "Any:" : "All:")
+                            Button(action: { showTagFilter = true }) {
+                                Text("\(viewModel.selectedTagFilters.count)")
                                     .font(.caption)
+                            }
+                            .buttonStyle(.plain)
+                            Button(action: { viewModel.selectedTagFilters.removeAll() }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .font(.caption2)
                                     .foregroundColor(.secondary)
                             }
-                            ForEach(viewModel.selectedTagFilters.sorted(), id: \.self) { tag in
-                                HStack(spacing: 2) {
-                                    Text(tag)
-                                        .font(.caption)
-                                    Button(action: { viewModel.selectedTagFilters.remove(tag) }) {
-                                        Image(systemName: "xmark.circle.fill")
-                                            .font(.caption2)
-                                            .foregroundColor(.secondary)
-                                    }
-                                    .buttonStyle(.plain)
-                                }
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
-                                .background(Color.accentColor.opacity(0.2))
-                                .cornerRadius(8)
-                            }
+                            .buttonStyle(.plain)
                         }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.accentColor.opacity(0.2))
+                        .cornerRadius(8)
                     }
                 }
 
